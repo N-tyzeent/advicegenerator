@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import dice from "./images/icon-dice.svg";
+import divided from "./images/pattern-divider-mobile.svg";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [data, setData] = useState("");
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    let fetchData = async (url) => {
+      let response = await fetch(url);
+      let receivedData = await response.json();
+      console.log(receivedData);
+      setData(receivedData);
+      setLoading(false);
+    };
+    fetchData("https://api.adviceslip.com/advice");
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {loading ? (
+        <p>loading...</p>
+      ) : (
+        <div className="data-div">
+          <p>
+            <span>ADVICE #{data.slip.id}</span>
+          </p>
+          <p>{data.slip.advice}</p>
+          <img className="divide" src={divided} alt="" />
+        </div>
+      )}
+      <div>
+        <img className="dice" src={dice} alt="" />
+      </div>
     </div>
   );
 }
